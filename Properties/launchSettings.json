@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WebGallery (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WebGallery (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
