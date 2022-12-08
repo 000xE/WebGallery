@@ -1,0 +1,21 @@
+﻿<ContentDialog
+    x:Class="WebGallery.UI.Dialogs.CreateWebCollectionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WebGallery.UI.Dialogs"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    PrimaryButtonText="Create collection"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    Title="Create collection"
+    PrimaryButtonClick="CreateCollectionDialog_PrimaryButtonClick"
+    >
+
+    <StackPanel Orientation="Vertical">
+        <TextBox x:Name="CollectionName"></TextBox>
+    </StackPanel>
+</ContentDialog>
