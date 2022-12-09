@@ -1,0 +1,24 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<ui:BaseContentDialog
+    xmlns:ui="using:WebGallery.Common.UI"
+    x:Class="WebGallery.UI.Dialogs.DeleteWebCollectionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WebGallery.UI.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    CloseButtonText="Cancel"
+    PrimaryButtonText="Delete collection"
+    PrimaryButtonClick="BaseContentDialog_PrimaryButtonClick"
+    Title="{x:Bind ViewModel.SelectedItem.Name,Mode=OneTime}">
+
+    <Grid>
+        <TextBlock>
+            Are you sure you want to delete this collection?
+        </TextBlock>
+    </Grid>
+</ui:BaseContentDialog>

@@ -10,12 +10,30 @@
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <Title></Title>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="WebGallery.Common\**" />
+    <EmbeddedResource Remove="WebGallery.Common\**" />
+    <None Remove="WebGallery.Common\**" />
+    <Page Remove="WebGallery.Common\**" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Remove="C:\Users\Main\.nuget\packages\tinyioc\1.4.0-rc1\contentFiles\cs\any\TinyIoc.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Pages\ThumbnailGallery.xaml" />
+    <None Remove="UI\Dialogs\AddLinksDialog.xaml" />
+    <None Remove="UI\Dialogs\CreateWebCollectionDialog.xaml" />
+    <None Remove="UI\Dialogs\DeleteWebCollectionDialog.xaml" />
+    <None Remove="UI\Dialogs\ImportFilesDialog.xaml" />
+    <None Remove="UI\Dialogs\RenameWebCollectionDialog.xaml" />
+    <None Remove="UI\Pages\MainPage.xaml" />
+    <None Remove="UI\Pages\WebCollectionPage.xaml" />
+    <None Remove="UI\Pages\WebMediaGalleryPage.xaml" />
+    <None Remove="UI\Windows\WebCollectionWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Themes\Generic.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +47,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
@@ -45,12 +66,36 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\ThumbnailGallery.xaml">
+    <None Update="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <Page Update="UI\Dialogs\RenameWebCollectionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <Page Update="UI\Dialogs\DeleteWebCollectionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Dialogs\AddLinksDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Pages\WebMediaGalleryPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Pages\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Windows\WebCollectionWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Pages\WebCollectionPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Dialogs\ImportFilesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Dialogs\CreateWebCollectionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!-- 
@@ -61,4 +106,10 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
+  <ItemGroup>
+    <PRIResource Remove="WebGallery.Common\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="WebGallery.Common\WebGallery.Common.csproj" />
+  </ItemGroup>
 </Project>

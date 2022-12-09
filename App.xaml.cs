@@ -1,6 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using System;
+using WebGallery.Common.Helpers;
+using WebGallery.Common.Helpers.Interfaces;
+using WebGallery.Databases;
+using WebGallery.Helpers;
+using WebGallery.Helpers.Interfaces;
+using WebGallery.Managers;
+using WebGallery.Managers.Interfaces;
+using WebGallery.UI.Windows;
+using WebGallery.ViewModels.Pages;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -12,6 +22,8 @@ namespace WebGallery
     /// </summary>
     public partial class App : Application
     {
+        public static Window Window => m_window;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -20,14 +32,48 @@ namespace WebGallery
         {
             this.InitializeComponent();
 
-            Ioc.Default.ConfigureServices(new ServiceCollection().BuildServiceProvider());
+            Ioc.Default.ConfigureServices(this.GetServiceDescriptors().BuildServiceProvider());
         }
 
         protected IServiceCollection GetServiceDescriptors()
         {
             var collection = new ServiceCollection();
+            collection.AddSingleton<IServiceProvider, Ioc>();
+
+            this.SetViewModels(collection);
+            this.SetHelpers(collection);
+            this.SetDatabases(collection);
+            this.SetManagers(collection);
 
             return collection;
+        }
+
+        protected void SetViewModels(IServiceCollection serviceDescriptors)
+        {
+            //Pages
+            serviceDescriptors.AddTransient<MainPageViewModel>();
+            serviceDescriptors.AddTransient<WebCollectionPageViewModel>();
+            serviceDescriptors.AddTransient<WebMediaGalleryPageViewModel>();
+        }
+
+        protected void SetHelpers(IServiceCollection serviceDescriptors)
+        {
+            serviceDescriptors.AddSingleton<IWindowHelper, WindowHelper>();
+            serviceDescriptors.AddSingleton<IFileHelper, FileHelper>();
+            serviceDescriptors.AddSingleton<IHTMLWebScraper, HTMLAgilityWebScraper>();
+            serviceDescriptors.AddSingleton<IWebHelper, WebHelper>();
+            serviceDescriptors.AddSingleton<IBitmapHelper, BitmapHelper>();
+        }
+
+        protected void SetDatabases(IServiceCollection serviceDescriptors)
+        {
+            serviceDescriptors.AddSingleton<WebDatabase>();
+        }
+
+        protected void SetManagers(IServiceCollection serviceDescriptors)
+        {
+            serviceDescriptors.AddSingleton<IWebCollectionManager, WebCollectionManager>();
+            serviceDescriptors.AddSingleton<IWebMediaManager, WebMediaManager>();
         }
 
         /// <summary>
@@ -41,6 +87,6 @@ namespace WebGallery
             m_window.Activate();
         }
 
-        private Window m_window;
+        private static Window m_window;
     }
 }

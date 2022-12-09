@@ -1,0 +1,47 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<ui:BasePage
+    xmlns:ui="using:WebGallery.Common.UI"    
+    x:Class="WebGallery.UI.Pages.WebMediaGalleryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:WebGallery.Models"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.Resources>
+        <DataTemplate x:Name="ThumbnailTemplate" x:DataType="models:WebMedia">
+            <StackPanel>
+                <Image MaxWidth="600" Source="{x:Bind ThumbnailFilePath}"/>
+                <TextBlock Padding="10" HorizontalAlignment="Center" Text="{x:Bind Title}" Foreground="AntiqueWhite" TextWrapping="WrapWholeWords"/>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid>
+        <RelativePanel>
+            <CommandBar Background="{ThemeResource AccentFillColorSelectedTextBackgroundBrush}" x:Name="CommandBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" ClosedDisplayMode="Compact">
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton Icon="Link" Label="Add links" Click="AddLinks_Click" />
+                    <AppBarSeparator/>
+                </CommandBar.PrimaryCommands>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Rename" Label="Rename collection" Click="RenameCollection_Click"/>
+                    <AppBarButton Icon="Delete" Label="Delete collection" Click="DeleteCollection_Click"/>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+            <GridView RelativePanel.Below="CommandBar"
+                    Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                    x:Name="Gallery"
+                    ItemTemplate="{StaticResource ThumbnailTemplate}"
+                    ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+                    CanReorderItems="True"
+                    CanDragItems="True"
+                    AllowDrop="True"
+                    SelectionMode="Extended">
+            </GridView>
+        </RelativePanel>
+    </Grid>
+</ui:BasePage>
