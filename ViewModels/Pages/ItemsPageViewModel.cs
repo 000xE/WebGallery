@@ -28,6 +28,8 @@ namespace WebGallery.ViewModels.Pages
 
         protected virtual bool ShouldRefreshOnNewItems => true;
 
+        protected virtual bool ShouldRefreshOnDeletedItems => true;
+
         protected virtual bool SelectFirstByDefault => true;
 
         protected virtual bool SelectOnNewObject => true;
@@ -41,9 +43,6 @@ namespace WebGallery.ViewModels.Pages
 
         [ObservableProperty]
         protected ObservableCollection<TEntity> _items = new();
-
-        [ObservableProperty]
-        protected ObservableCollection<TEntity> _childItems = new();
 
         [ObservableProperty]
         protected TEntity _selectedItem;
@@ -87,7 +86,9 @@ namespace WebGallery.ViewModels.Pages
 
         public int SaveObject(TEntity entity)
         {
-            return this.manager.Save(entity);
+            var changed = this.manager.Save(entity);
+
+            return changed;
         }
 
         public virtual TEntity NewObject(Func<TEntity, bool> func)
@@ -119,20 +120,31 @@ namespace WebGallery.ViewModels.Pages
             return entity;
         }
 
+        public virtual int DeleteObject(TEntity entity)
+        {
+            var changed = this.manager.Delete(entity); 
+            
+            if (this.ShouldRefreshOnDeletedItems && changed > 0)
+            {
+                this.RemoveItem(entity);
+            }
+
+            return changed;
+        }
+
         protected void AddItem(TEntity entity)
         {
             this._items.Add(entity);
+        }
 
-            if (entity.ParentId != 0)
-            {
-                this._childItems.Add(entity);
-            }
+        protected void RemoveItem(TEntity entity)
+        {
+            this._items.Remove(entity);
         }
 
         public override void Dispose()
         {
             this.Items.Clear();
-            this.ChildItems.Clear();
 
             base.Dispose();
         }

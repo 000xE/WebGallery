@@ -26,14 +26,14 @@
                 <AppBarButton Icon="NewFolder" Label="New collection" Click="NewCollection_Click"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Icon="Rename" Label="Rename"/>
-                <AppBarButton Icon="Delete" Label="Clear collection"/>
+                <AppBarButton Icon="Rename" Label="Rename collection" Click="RenameCollection_Click"/>
+                <AppBarButton Icon="Delete" Label="Delete collection" Click="DeleteCollection_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.TopAppBar>
 
     <NavigationView
-        Header="test"
+        Header="{x:Bind ViewModel.SelectedItem.Name, Mode=OneWay}"
         MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
         MenuItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
         SelectedItem="{x:Bind ViewModel.SelectedCategory, Mode=TwoWay}"

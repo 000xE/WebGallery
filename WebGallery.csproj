@@ -23,8 +23,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="UI\Dialogs\AddLinksDialog.xaml" />
-    <None Remove="UI\Dialogs\CreateCollectionDialog.xaml" />
+    <None Remove="UI\Dialogs\CreateWebCollectionDialog.xaml" />
+    <None Remove="UI\Dialogs\DeleteWebCollectionDialog.xaml" />
     <None Remove="UI\Dialogs\ImportFilesDialog.xaml" />
+    <None Remove="UI\Dialogs\RenameWebCollectionDialog.xaml" />
     <None Remove="UI\Pages\MainPage.xaml" />
     <None Remove="UI\Pages\WebCollectionPage.xaml" />
     <None Remove="UI\Pages\WebMediaGalleryPage.xaml" />
@@ -67,6 +69,12 @@
     <None Update="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="UI\Dialogs\RenameWebCollectionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Dialogs\DeleteWebCollectionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="UI\Dialogs\AddLinksDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -85,7 +93,7 @@
     <Page Update="UI\Dialogs\ImportFilesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="UI\Dialogs\CreateCollectionDialog.xaml">
+    <Page Update="UI\Dialogs\CreateWebCollectionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

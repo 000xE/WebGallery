@@ -16,5 +16,25 @@ namespace WebGallery.Common.UI
         protected IWindowHelper windowHelper;
 
         protected void InitialiseWithWindow(object target) => this.windowHelper.InitialiseWithWindow(target);
+
+        protected virtual void BaseContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+        }
+
+        protected virtual void BaseContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+        }
+
+        protected virtual void BaseContentDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+        }
+
+        protected virtual void BaseContentDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)
+        {
+
+        }
     }
 }

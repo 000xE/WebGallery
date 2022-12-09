@@ -57,9 +57,21 @@ namespace WebGallery.UI.Pages
 
         private async void NewCollection_Click(object sender, RoutedEventArgs e)
         {
-            var casted = this.ViewModel as IEntitySaveableViewModel<WebCollection>;
+            CreateWebCollectionDialog dialog = new(sender, this.ViewModel);
 
-            CreateWebCollectionDialog dialog = new(sender, casted);
+            await dialog.ShowAsync();
+        }
+
+        private async void RenameCollection_Click(object sender, RoutedEventArgs e)
+        {
+            RenameWebCollectionDialog dialog = new(sender, this.ViewModel, this.ViewModel.ParentEntity);
+
+            await dialog.ShowAsync();
+        }
+
+        private async void DeleteCollection_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteWebCollectionDialog dialog = new(sender, this.ViewModel, this.ViewModel.ParentEntity);
 
             await dialog.ShowAsync();
         }
@@ -73,7 +85,7 @@ namespace WebGallery.UI.Pages
                     var intTag = Convert.ToInt32(this.ViewModel.SelectedCategory.Tag);
 
                     this.ViewModel.SelectedItem = this.ViewModel.Items.First(i => i.Id == intTag);
-                    this.ContentFrame.Navigate(typeof(WebMediaGalleryPage), this.ViewModel.SelectedItem);
+                    this.ContentFrame.Navigate(typeof(WebMediaGalleryPage), this.ViewModel);
                 }
             }
         }

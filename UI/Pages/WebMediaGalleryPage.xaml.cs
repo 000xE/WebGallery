@@ -8,6 +8,7 @@ using System;
 using WebGallery.Models;
 using WebGallery.UI.Dialogs;
 using WebGallery.ViewModels.Pages;
+using WebGallery.ViewModels.Pages.Interfaces;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,35 +29,44 @@ namespace WebGallery.UI.Pages
         }
 
         public WebMediaGalleryPageViewModel ViewModel { get; private set; }
-
-        public WebCollection WebCollection { get; private set; }
+        
+        public IEntityViewModel<WebCollection> CollectionViewModel { get; private set; } 
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            this.WebCollection = e.Parameter as WebCollection;
+            this.CollectionViewModel = e.Parameter as IEntityViewModel<WebCollection>;
 
-            if (this.WebCollection == null)
-            {
-                throw new NullReferenceException("WebCollection cannot be null");
-            }
+            this.ViewModel.WebCollection = this.CollectionViewModel.SelectedItem;
 
-            this.ViewModel.WebCollection = this.WebCollection;
-
-            this.ViewModel.RefreshCollection(i => i.CollectionId == this.WebCollection.Id);
-        }
-
-        private void WebMediaGalleryPage_Unloaded(object sender, RoutedEventArgs e)
-        {
-            this.Unloaded -= this.WebMediaGalleryPage_Unloaded;
-            this.ViewModel.Dispose();
+            this.ViewModel.RefreshCollection(i => i.CollectionId == this.CollectionViewModel.SelectedItem.Id);
         }
 
         private async void AddLinks_Click(object sender, RoutedEventArgs e)
         {
             AddLinksDialog addLinksDialog = new(sender, this.ViewModel); 
             await addLinksDialog.ShowAsync();
+        }
+
+        private async void RenameCollection_Click(object sender, RoutedEventArgs e)
+        {
+            RenameWebCollectionDialog dialog = new(sender, this.CollectionViewModel, this.CollectionViewModel.SelectedItem);
+
+            await dialog.ShowAsync();
+        }
+
+        private async void DeleteCollection_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteWebCollectionDialog dialog = new(sender, this.CollectionViewModel, this.CollectionViewModel.SelectedItem);
+
+            await dialog.ShowAsync();
+        }
+
+        private void WebMediaGalleryPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.Unloaded -= this.WebMediaGalleryPage_Unloaded;
+            this.ViewModel.Dispose();
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using System;
-using WebGallery.Common.Helpers.Interfaces;
+using System.IO;
 using WebGallery.Models;
 using WebGallery.ViewModels.Pages.Interfaces;
 using Windows.Storage.Pickers;
@@ -18,29 +17,15 @@ namespace WebGallery.UI.Dialogs
     {
         private bool overrideCancel = true;
 
-        public CreateWebCollectionDialog(object sender, IEntitySaveableViewModel<WebCollection> viewModel) : base (sender)
+        public CreateWebCollectionDialog(object sender, IEntityViewModel<WebCollection> viewModel) : base (sender)
         {
             this.InitializeComponent();
             this.ViewModel = viewModel;
-
-            this.Closing += this.CreateWebCollectionDialog_Closing;
         }
 
-        private void CreateWebCollectionDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)
-        {
-            if (this.overrideCancel)
-            {
-                args.Cancel = string.IsNullOrEmpty(this.CollectionName.Text);
-            }
-            else
-            {
-                args.Cancel = false;
-            }
-        }
+        public IEntityViewModel<WebCollection> ViewModel { get; private set; }
 
-        public IEntitySaveableViewModel<WebCollection> ViewModel { get; private set; }
-
-        private async void CreateCollectionDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        protected override async void BaseContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             if (!string.IsNullOrEmpty(this.CollectionName.Text))
             {
@@ -62,7 +47,7 @@ namespace WebGallery.UI.Dialogs
                         this.ViewModel.NewObject(i =>
                         {
                             i.Name = this.CollectionName.Text;
-                            i.ResourceFolderPath = folder.Path;
+                            i.ResourceFolderPath = Path.Combine(folder.Path, i.Guid.ToString());
                             return true;
                         });
                     }
@@ -83,9 +68,21 @@ namespace WebGallery.UI.Dialogs
             }
         }
 
-        private void CreateCollectionDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        protected override void BaseContentDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             this.overrideCancel = false;
+        }
+
+        protected override void BaseContentDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)
+        {
+            if (this.overrideCancel)
+            {
+                args.Cancel = string.IsNullOrEmpty(this.CollectionName.Text);
+            }
+            else
+            {
+                args.Cancel = false;
+            }
         }
     }
 }

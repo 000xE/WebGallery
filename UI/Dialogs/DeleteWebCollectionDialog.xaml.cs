@@ -13,8 +13,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using WebGallery.Common.UI;
+using WebGallery.Models;
+using WebGallery.ViewModels.Pages.Interfaces;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -24,19 +28,22 @@ namespace WebGallery.UI.Dialogs
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddLinksDialog : BaseContentDialog
+    public sealed partial class DeleteWebCollectionDialog : BaseContentDialog
     {
-        public AddLinksDialog(object sender, ILinesProcessableViewModel viewModel) : base(sender)
+        public DeleteWebCollectionDialog(object sender, IEntityViewModel<WebCollection> viewModel, WebCollection webCollection) : base(sender)
         {
             this.InitializeComponent();
             this.ViewModel = viewModel;
+            this.WebCollection = webCollection;
         }
 
-        public ILinesProcessableViewModel ViewModel { get; private set; }
+        public IEntityViewModel<WebCollection> ViewModel { get; private set; }
 
-        protected override async void BaseContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        public WebCollection WebCollection { get; private set; }
+
+        protected override void BaseContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            await this.ViewModel.ProcessString(this.Links.Text);
+            this.ViewModel.DeleteObject(this.WebCollection);
         }
     }
 }

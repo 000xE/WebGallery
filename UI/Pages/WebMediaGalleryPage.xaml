@@ -28,8 +28,8 @@
                     <AppBarSeparator/>
                 </CommandBar.PrimaryCommands>
                 <CommandBar.SecondaryCommands>
-                    <AppBarButton Icon="Rename" Label="Rename"/>
-                    <AppBarButton Icon="Delete" Label="Clear sub collection"/>
+                    <AppBarButton Icon="Rename" Label="Rename collection" Click="RenameCollection_Click"/>
+                    <AppBarButton Icon="Delete" Label="Delete collection" Click="DeleteCollection_Click"/>
                 </CommandBar.SecondaryCommands>
             </CommandBar>
             <GridView RelativePanel.Below="CommandBar"

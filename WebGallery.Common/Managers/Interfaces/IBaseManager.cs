@@ -7,6 +7,9 @@ namespace WebGallery.Common.Managers.Interfaces
 {
     public interface IBaseManager<TEntity> where TEntity : class, IEntity, new()
     {
+        int Delete(IEnumerable<int> ids);
+        int Delete(int id);
+        int Delete(TEntity record);
         TEntity Find(Expression<Func<TEntity, bool>> predicate);
         TEntity Find(int id);
         TEntity Get(Expression<Func<TEntity, bool>> predicate);
