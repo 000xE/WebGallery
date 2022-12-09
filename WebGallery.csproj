@@ -22,6 +22,7 @@
     <Compile Remove="C:\Users\Main\.nuget\packages\tinyioc\1.4.0-rc1\contentFiles\cs\any\TinyIoc.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="UI\Dialogs\AddLinksDialog.xaml" />
     <None Remove="UI\Dialogs\CreateCollectionDialog.xaml" />
     <None Remove="UI\Dialogs\ImportFilesDialog.xaml" />
     <None Remove="UI\Pages\MainPage.xaml" />
@@ -66,6 +67,9 @@
     <None Update="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="UI\Dialogs\AddLinksDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="UI\Pages\WebMediaGalleryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

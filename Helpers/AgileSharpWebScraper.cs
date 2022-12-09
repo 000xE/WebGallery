@@ -1,10 +1,4 @@
-﻿using AngleSharp.Dom;
-using AngleSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebGallery.Helpers.Interfaces;
 using WebGallery.Models.Structures;
 
@@ -17,7 +11,7 @@ namespace WebGallery.Helpers
 
         }
 
-        public Task<ThumbnailMedia> DownloadMetadataAsync(string url)
+        public Task<Media> DownloadMediaAsync(string url)
         {
             /*
             IConfiguration config = Configuration.Default.WithDefaultLoader();
@@ -29,7 +23,7 @@ namespace WebGallery.Helpers
             IEnumerable<string> titles = cells.Select(m => m.TextContent);
             */
 
-            return Task.FromResult(new ThumbnailMedia());
+            return Task.FromResult(new Media());
         }
     }
 }

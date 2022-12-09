@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace WebGallery.ViewModels.Pages.Interfaces
+namespace WebGallery.Common.ViewModels.Interfaces
 {
     public interface IFileProcessable
     {
-        void ProcessFiles(List<StorageFile> files);
+        Task ProcessFiles(List<StorageFile> files);
     }
 }

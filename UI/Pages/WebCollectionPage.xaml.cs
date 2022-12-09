@@ -1,10 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Linq;
-using WebGallery.Common.Helpers.Interfaces;
 using WebGallery.Models;
 using WebGallery.UI.Dialogs;
 using WebGallery.ViewModels.Pages;
@@ -46,11 +44,6 @@ namespace WebGallery.UI.Pages
             this.ViewModel.Dispose();
         }
 
-        private void AddLinks_Click(object sender, RoutedEventArgs e)
-        {
-            //todo: pass URLs, then DL <--- all through viewmodel
-        }
-
         private async void ImportFiles_Click(object sender, RoutedEventArgs e)
         {
             FileOpenPicker fileOpenPicker = new();
@@ -59,21 +52,16 @@ namespace WebGallery.UI.Pages
             fileOpenPicker.FileTypeFilter.Add(".txt");
             var files = await fileOpenPicker.PickMultipleFilesAsync();
 
-            this.ViewModel.ProcessFiles(files.ToList());
-
-            //todo: read from storage files then pass URLs, then DL <--- all through viewmodel (1 collection per file!!!)
+            await this.ViewModel.ProcessFiles(files.ToList());
         }
 
         private async void NewCollection_Click(object sender, RoutedEventArgs e)
         {
             var casted = this.ViewModel as IEntitySaveableViewModel<WebCollection>;
 
-            CreateWebCollectionDialog dialog = new(casted)
-            {
-                XamlRoot = ((Button)sender).XamlRoot
-            };
+            CreateWebCollectionDialog dialog = new(sender, casted);
 
-            var result = await dialog.ShowAsync();
+            await dialog.ShowAsync();
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -88,11 +76,6 @@ namespace WebGallery.UI.Pages
                     this.ContentFrame.Navigate(typeof(WebMediaGalleryPage), this.ViewModel.SelectedItem);
                 }
             }
-        }
-
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            
         }
     }
 }

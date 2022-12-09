@@ -13,17 +13,35 @@
     
     <Page.Resources>
         <DataTemplate x:Name="ThumbnailTemplate" x:DataType="models:WebMedia">
-            <RelativePanel>
-                <Image Source="{x:Bind ThumbnailFilePath}"/>
-                <TextBlock Text="{x:Bind Title}" Foreground="AntiqueWhite"/>
-            </RelativePanel>
+            <StackPanel>
+                <Image MaxWidth="600" Source="{x:Bind ThumbnailFilePath}"/>
+                <TextBlock Padding="10" HorizontalAlignment="Center" Text="{x:Bind Title}" Foreground="AntiqueWhite" TextWrapping="WrapWholeWords"/>
+            </StackPanel>
         </DataTemplate>
     </Page.Resources>
-    
-    <GridView
-            Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
-            x:Name="Gallery"
-            ItemTemplate="{StaticResource ThumbnailTemplate}"
-            ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
-            CanDragItems="True"/>
+
+    <Grid>
+        <RelativePanel>
+            <CommandBar Background="{ThemeResource AccentFillColorSelectedTextBackgroundBrush}" x:Name="CommandBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" ClosedDisplayMode="Compact">
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton Icon="Link" Label="Add links" Click="AddLinks_Click" />
+                    <AppBarSeparator/>
+                </CommandBar.PrimaryCommands>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Rename" Label="Rename"/>
+                    <AppBarButton Icon="Delete" Label="Clear sub collection"/>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+            <GridView RelativePanel.Below="CommandBar"
+                    Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                    x:Name="Gallery"
+                    ItemTemplate="{StaticResource ThumbnailTemplate}"
+                    ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+                    CanReorderItems="True"
+                    CanDragItems="True"
+                    AllowDrop="True"
+                    SelectionMode="Extended">
+            </GridView>
+        </RelativePanel>
+    </Grid>
 </ui:BasePage>

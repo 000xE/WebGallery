@@ -16,9 +16,9 @@ namespace WebGallery.UI.Converters
             {
                 if (value is IThumbnailMedia media)
                 {
-                    var data = media.ThumbnailData;
+                    var data = media.Thumbnail;
 
-                    return this.GetBitmap(data);
+                    return this.GetBitmap(data.Data);
                 }
             }
 

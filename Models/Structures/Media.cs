@@ -4,7 +4,7 @@ using WebGallery.Models.Interfaces;
 
 namespace WebGallery.Models.Structures
 {
-    public struct ThumbnailMedia : IThumbnailMedia
+    public struct Media : IThumbnailMedia
     {
         public string Title { get; set; }
 
@@ -16,6 +16,6 @@ namespace WebGallery.Models.Structures
 
         public string ThumbnailURL { get; set; }
 
-        public ThumbnailData ThumbnailData { get; set; }
+        public Thumbnail Thumbnail { get; set; }
     }
 }

@@ -21,15 +21,13 @@
     <Page.TopAppBar>
         <CommandBar ClosedDisplayMode="Compact" DefaultLabelPosition="Right">
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Link" Label="Add links" Click="AddLinks_Click" />
-                <AppBarSeparator/>
                 <AppBarButton Icon="OpenFile" Label="Import files" Click="ImportFiles_Click"/>
                 <AppBarSeparator/>
                 <AppBarButton Icon="NewFolder" Label="New collection" Click="NewCollection_Click"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
+                <AppBarButton Icon="Rename" Label="Rename"/>
                 <AppBarButton Icon="Delete" Label="Clear collection"/>
-                <AppBarButton Icon="OpenFile" Label="Open"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.TopAppBar>
@@ -39,7 +37,6 @@
         MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
         MenuItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
         SelectedItem="{x:Bind ViewModel.SelectedCategory, Mode=TwoWay}"
-        SelectionChanged="NavigationView_SelectionChanged"
         IsBackButtonVisible="Collapsed">
 
         <Frame x:Name="ContentFrame"/>

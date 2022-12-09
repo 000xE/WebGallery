@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WebGallery.Helpers.Interfaces;
+using WebGallery.Models;
 using WebGallery.Models.Enums;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -14,11 +15,16 @@ namespace WebGallery.Helpers
         {
 
         }
-        public async Task SaveMediaAsync(StorageFile storageFile, MediaType mediaType, int width, int height, byte[] data)
+
+        public async Task SaveMediaAsync(StorageFile storageFile, Thumbnail thumbnail)
         {
             using IRandomAccessStream randomAccessStream = await storageFile.OpenAsync(FileAccessMode.ReadWrite);
 
-            switch (mediaType)
+            var width = thumbnail.Data.Size.Width;
+            var height = thumbnail.Data.Size.Height;
+            var data = thumbnail.Data.Data;
+
+            switch (thumbnail.MediaType)
             {
                 case MediaType.Video:
                 case MediaType.Audio:
@@ -30,7 +36,6 @@ namespace WebGallery.Helpers
                     await this.SaveBitmap(randomAccessStream, BitmapEncoder.JpegEncoderId, width, height, data);
                     break;
             }
-
         }
 
         private async Task SaveBitmap(IRandomAccessStream randomAccessStream, Guid bitmapEncoderId, int width, int height, byte[] data)

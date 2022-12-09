@@ -1,11 +1,9 @@
 ﻿using HtmlAgilityPack;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebGallery.Helpers.Interfaces;
+using WebGallery.Models;
 using WebGallery.Models.Structures;
 
 namespace WebGallery.Helpers
@@ -19,7 +17,7 @@ namespace WebGallery.Helpers
 
         }
 
-        public async Task<ThumbnailMedia> DownloadMetadataAsync(string url)
+        public async Task<Media> DownloadMediaAsync(string url)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -34,11 +32,18 @@ namespace WebGallery.Helpers
             return default;
         }
 
-        private ThumbnailMedia ScrapeMedia(HtmlNodeCollection htmlNodes)
+        private Media ScrapeMedia(HtmlNodeCollection htmlNodes)
         {
-            ThumbnailMedia media = new();
-            media.Guid = Guid.NewGuid();
-            media.MediaType = Models.Enums.MediaType.Image;
+            Media media = new()
+            {
+                Guid = Guid.NewGuid(),
+                MediaType = Models.Enums.MediaType.Image
+            };
+
+            Thumbnail thumbnail = new()
+            {
+                MediaType = Models.Enums.MediaType.Image
+            };
 
             if (htmlNodes != null)
             {
@@ -69,14 +74,19 @@ namespace WebGallery.Helpers
                                             media.URL = content.Value;
                                             break;
                                         case "og:image":
+                                            thumbnail.MediaType = Models.Enums.MediaType.Image;
+                                            media.MediaType = Models.Enums.MediaType.Image;
+
                                             if (property.Value.Contains(".gif"))
                                             {
+                                                thumbnail.MediaType = Models.Enums.MediaType.Animated;
                                                 media.MediaType = Models.Enums.MediaType.Animated;
+
                                                 media.URL = content.Value;
                                             }
+
                                             media.ThumbnailURL = content.Value;
                                             break;
-
                                     }
                                 }
                             }
@@ -84,6 +94,8 @@ namespace WebGallery.Helpers
                     }
                 });
             }
+
+            media.Thumbnail = thumbnail;
 
             return media;
         }

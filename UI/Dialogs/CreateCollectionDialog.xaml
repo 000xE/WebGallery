@@ -14,9 +14,11 @@
     DefaultButton="Primary"
     Title="Create collection"
     PrimaryButtonClick="CreateCollectionDialog_PrimaryButtonClick"
+    CloseButtonClick="CreateCollectionDialog_CloseButtonClick"
     >
 
     <StackPanel Orientation="Vertical">
         <TextBox x:Name="CollectionName"></TextBox>
+        <InfoBar x:Name="InfoBar" Severity="Error" Title="Error" IsOpen="False"/>
     </StackPanel>
 </ui:BaseContentDialog>

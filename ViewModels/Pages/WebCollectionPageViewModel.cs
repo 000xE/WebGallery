@@ -1,23 +1,15 @@
-﻿using ABI.System;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using WebGallery.Common.Helpers.Interfaces;
 using WebGallery.Helpers.Interfaces;
 using WebGallery.Managers.Interfaces;
 using WebGallery.Models;
-using WebGallery.Models.Interfaces;
-using WebGallery.Models.Structures;
-using WebGallery.ViewModels.Pages.Interfaces;
 using Windows.Storage;
 
 namespace WebGallery.ViewModels.Pages
@@ -42,7 +34,7 @@ namespace WebGallery.ViewModels.Pages
         protected override bool ShouldInitialiseItems => true;
 
         [ObservableProperty]
-        private ObservableCollection<Category> _categories = new ObservableCollection<Category>();
+        private ObservableCollection<Category> _categories = new();
 
         [ObservableProperty]
         private Category _selectedCategory;
@@ -68,7 +60,7 @@ namespace WebGallery.ViewModels.Pages
             return collection;
         }
 
-        public async void ProcessFiles(List<StorageFile> files)
+        public async Task ProcessFiles(List<StorageFile> files)
         {
             foreach (var file in files)
             {
@@ -87,10 +79,10 @@ namespace WebGallery.ViewModels.Pages
                 foreach (var uri in uris)
                 {
                     var media = await this.webHelper.DownloadMedia(uri.ToString(), true);
-                    if (media.ThumbnailData.Data != null)
+                    if (media.Thumbnail.Data.Data != null)
                     {
-                        var storageFile = await this.fileHelper.GetFileAsync(this.ParentEntity.ResourceFolderPath, collection.Guid.ToString(), media.Guid.ToString());
-                        await this.bitmapHelper.SaveMediaAsync(storageFile, media.MediaType, media.ThumbnailData.Size.Width, media.ThumbnailData.Size.Height, media.ThumbnailData.Data);
+                        var storageFile = await this.fileHelper.GetFileAsync(collection.ResourceFolderPath, media.Guid.ToString());
+                        await this.bitmapHelper.SaveMediaAsync(storageFile, media.Thumbnail);
 
                         var saved = this.webMediaManager.NewSave((Func<WebMedia, bool>)(i =>
                         {

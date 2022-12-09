@@ -6,13 +6,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using WebGallery.Common.Managers.Interfaces;
-using WebGallery.Common.ViewModels;
 using WebGallery.ViewModels.Pages.Interfaces;
 
 namespace WebGallery.ViewModels.Pages
 {
     [ObservableObject]
-    public partial class ItemsPageViewModel<TEntity, TManager> : PageViewModel, IItemsViewModel<TEntity>, IDisposable
+    public partial class ItemsPageViewModel<TEntity, TManager> : PageViewModel, IItemsViewModel<TEntity>
         where TEntity : class, IEntity, new()
         where TManager : class, IBaseManager<TEntity>
     {
@@ -31,6 +30,8 @@ namespace WebGallery.ViewModels.Pages
 
         protected virtual bool SelectFirstByDefault => true;
 
+        protected virtual bool SelectOnNewObject => true;
+
         protected virtual Expression<Func<TEntity, bool>> Expression => null;
 
 #nullable enable
@@ -39,10 +40,10 @@ namespace WebGallery.ViewModels.Pages
 #nullable disable
 
         [ObservableProperty]
-        protected ObservableCollection<TEntity> _items = new ObservableCollection<TEntity>();
+        protected ObservableCollection<TEntity> _items = new();
 
         [ObservableProperty]
-        protected ObservableCollection<TEntity> _childItems = new ObservableCollection<TEntity>();
+        protected ObservableCollection<TEntity> _childItems = new();
 
         [ObservableProperty]
         protected TEntity _selectedItem;
@@ -91,8 +92,10 @@ namespace WebGallery.ViewModels.Pages
 
         public virtual TEntity NewObject(Func<TEntity, bool> func)
         {
-            var entity = new TEntity();
-            entity.Guid = Guid.NewGuid();
+            var entity = new TEntity
+            {
+                Guid = Guid.NewGuid()
+            };
 
             if (this.ParentEntity != null)
             {
@@ -108,6 +111,11 @@ namespace WebGallery.ViewModels.Pages
                 this.AddItem(entity);
             }
 
+            if (this.SelectOnNewObject)
+            {
+                this.SelectedItem = entity;
+            }
+
             return entity;
         }
 
@@ -121,10 +129,12 @@ namespace WebGallery.ViewModels.Pages
             }
         }
 
-        public virtual void Dispose()
+        public override void Dispose()
         {
             this.Items.Clear();
             this.ChildItems.Clear();
+
+            base.Dispose();
         }
     }
 }

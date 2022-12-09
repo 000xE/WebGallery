@@ -1,9 +1,7 @@
-﻿using WebGallery.Models.Structures;
-
-namespace WebGallery.Models.Interfaces
+﻿namespace WebGallery.Models.Interfaces
 {
     public interface IThumbnailMedia : IWebMedia
     {
-        ThumbnailData ThumbnailData { get; set; }
+        Thumbnail Thumbnail { get; set; }
     }
 }

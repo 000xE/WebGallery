@@ -16,45 +16,76 @@ namespace WebGallery.UI.Dialogs
     /// </summary>
     public sealed partial class CreateWebCollectionDialog : BaseContentDialog
     {
-        public CreateWebCollectionDialog(IEntitySaveableViewModel<WebCollection> viewModel)
+        private bool overrideCancel = true;
+
+        public CreateWebCollectionDialog(object sender, IEntitySaveableViewModel<WebCollection> viewModel) : base (sender)
         {
             this.InitializeComponent();
             this.ViewModel = viewModel;
+
+            this.Closing += this.CreateWebCollectionDialog_Closing;
         }
 
-        public IEntitySaveableViewModel<WebCollection> ViewModel { get; set; }
+        private void CreateWebCollectionDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)
+        {
+            if (this.overrideCancel)
+            {
+                args.Cancel = string.IsNullOrEmpty(this.CollectionName.Text);
+            }
+            else
+            {
+                args.Cancel = false;
+            }
+        }
+
+        public IEntitySaveableViewModel<WebCollection> ViewModel { get; private set; }
 
         private async void CreateCollectionDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            if (this.ViewModel.ParentEntity == null)
+            if (!string.IsNullOrEmpty(this.CollectionName.Text))
             {
-                FolderPicker folderPicker = new FolderPicker();
+                this.InfoBar.IsOpen = false;
 
-                this.InitialiseWithWindow(folderPicker);
+                if (this.ViewModel.ParentEntity == null)
+                {
+                    FolderPicker folderPicker = new();
 
-                folderPicker.SuggestedStartLocation = PickerLocationId.Unspecified;
-                folderPicker.FileTypeFilter.Add("*");
+                    this.InitialiseWithWindow(folderPicker);
 
-                var folder = await folderPicker.PickSingleFolderAsync();
+                    folderPicker.SuggestedStartLocation = PickerLocationId.Desktop;
+                    folderPicker.FileTypeFilter.Add("*");
 
-                if (folder != null)
+                    var folder = await folderPicker.PickSingleFolderAsync();
+
+                    if (folder != null)
+                    {
+                        this.ViewModel.NewObject(i =>
+                        {
+                            i.Name = this.CollectionName.Text;
+                            i.ResourceFolderPath = folder.Path;
+                            return true;
+                        });
+                    }
+                }
+                else
                 {
                     this.ViewModel.NewObject(i =>
                     {
                         i.Name = this.CollectionName.Text;
-                        i.ResourceFolderPath = folder.Path;
                         return true;
                     });
                 }
             }
             else
             {
-                this.ViewModel.NewObject(i =>
-                {
-                    i.Name = this.CollectionName.Text;
-                    return true;
-                });
+                this.InfoBar.Message = "Please enter a valid collection name";
+                this.InfoBar.IsOpen = true;
             }
+        }
+
+        private void CreateCollectionDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            this.overrideCancel = false;
         }
     }
 }

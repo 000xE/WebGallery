@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using WebGallery.Common.Databases.Interfaces;
 using WebGallery.Common.Extensions;
 using WebGallery.Common.Managers.Interfaces;
 using WebGallery.Common.Models.Interfaces;
-using Windows.Data.Xml.Dom;
 
 namespace WebGallery.Common.Managers
 {
@@ -59,6 +55,8 @@ namespace WebGallery.Common.Managers
 
             this.Database.RunInTransaction(conn =>
             {
+                var preSave = this.PreSave(entity);
+
                 changed = conn.InsertOrReplaceExisting(entity);
             });
 
@@ -67,13 +65,20 @@ namespace WebGallery.Common.Managers
 
         public TEntity NewSave(Func<TEntity, bool> func) 
         {
-            var entity = new TEntity();
-            entity.Guid = Guid.NewGuid();
+            var entity = new TEntity
+            {
+                Guid = Guid.NewGuid()
+            };
 
             func(entity); 
             
             this.Save(entity);
 
+            return entity;
+        }
+
+        protected virtual TEntity PreSave(TEntity entity)
+        {
             return entity;
         }
     }

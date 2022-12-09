@@ -6,6 +6,6 @@ namespace WebGallery.Helpers.Interfaces
 {
     public interface IHTMLWebScraper
     {
-        Task<ThumbnailMedia> DownloadMetadataAsync(string url);
+        Task<Media> DownloadMediaAsync(string url);
     }
 }

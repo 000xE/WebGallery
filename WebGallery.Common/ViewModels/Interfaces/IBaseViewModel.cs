@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebGallery.Common.ViewModels.Interfaces
 {
-    public interface IBaseViewModel
+    public interface IBaseViewModel : IDisposable
     {
     }
 }

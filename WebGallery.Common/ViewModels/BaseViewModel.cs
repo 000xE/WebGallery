@@ -15,5 +15,10 @@ namespace WebGallery.Common.ViewModels
         { 
             this.ServiceProvider = serviceProvider;
         }
+
+        public virtual void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
     }
 }
