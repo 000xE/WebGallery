@@ -30,15 +30,15 @@ namespace WebGallery.Helpers
                 case MediaType.Audio:
                     break;
                 case MediaType.Animated:
-                    await this.SaveBitmap(randomAccessStream, BitmapEncoder.GifEncoderId, width, height, data);
+                    await BitmapHelper.SaveBitmap(randomAccessStream, BitmapEncoder.GifEncoderId, width, height, data);
                     break;
                 case MediaType.Image:
-                    await this.SaveBitmap(randomAccessStream, BitmapEncoder.JpegEncoderId, width, height, data);
+                    await BitmapHelper.SaveBitmap(randomAccessStream, BitmapEncoder.JpegEncoderId, width, height, data);
                     break;
             }
         }
 
-        private async Task SaveBitmap(IRandomAccessStream randomAccessStream, Guid bitmapEncoderId, int width, int height, byte[] data)
+        private async static Task SaveBitmap(IRandomAccessStream randomAccessStream, Guid bitmapEncoderId, int width, int height, byte[] data)
         {
             BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(bitmapEncoderId, randomAccessStream);
 

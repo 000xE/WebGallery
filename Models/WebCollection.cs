@@ -1,9 +1,4 @@
-﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace WebGallery.Models
 {
@@ -17,7 +12,7 @@ namespace WebGallery.Models
 
         public override string ToString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
             stringBuilder.Append(this.Id);
             stringBuilder.Append(" - ");
             stringBuilder.Append(this.Name);

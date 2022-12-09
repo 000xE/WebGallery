@@ -10,7 +10,7 @@ namespace WebGallery.Helpers
 {
     public class HTMLAgilityWebScraper : IHTMLWebScraper
     {
-        private SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim semaphoreSlim = new(1, 1);
 
         public HTMLAgilityWebScraper()
         {
