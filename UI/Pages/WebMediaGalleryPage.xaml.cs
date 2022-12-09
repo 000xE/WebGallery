@@ -27,14 +27,14 @@ namespace WebGallery.UI.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class WebMediaGalleryPage : Page
+    public sealed partial class WebMediaGalleryPage : BasePage
     {
         public WebMediaGalleryPage()
         {
             this.InitializeComponent();
             this.DataContext = this.ViewModel = Ioc.Default.GetService<WebMediaGalleryPageViewModel>();
 
-            this.Unloaded += WebMediaGalleryPage_Unloaded;
+            this.Unloaded += this.WebMediaGalleryPage_Unloaded;
         }
 
         public WebMediaGalleryPageViewModel ViewModel { get; private set; }
@@ -57,7 +57,7 @@ namespace WebGallery.UI.Pages
 
         private void WebMediaGalleryPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.Unloaded -= WebMediaGalleryPage_Unloaded;
+            this.Unloaded -= this.WebMediaGalleryPage_Unloaded;
             this.ViewModel.Dispose();
         }
     }

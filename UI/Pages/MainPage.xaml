@@ -1,5 +1,5 @@
-﻿<Page
-    x:Class="WebGallery.UI.Pages.MainPage"
+﻿<ui:BasePage
+    xmlns:ui="using:WebGallery.Common.UI"    x:Class="WebGallery.UI.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WebGallery.UI.Pages"
@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <SplitButton x:Name="openCollection" Click="openCollection_Click" HorizontalAlignment="Center">
+        <SplitButton x:Name="openCollection" Click="OpenCollection_Click" HorizontalAlignment="Center">
             <TextBlock Text="{x:Bind ViewModel.SelectedItem, Mode=OneWay}"/>
             <SplitButton.Flyout>
                 <Flyout Placement="Auto">
@@ -17,6 +17,6 @@
                 </Flyout>
             </SplitButton.Flyout>
         </SplitButton>
-        <Button x:Name="createCollection" HorizontalAlignment="Center" Click="createCollection_Click">Create a new collection</Button>
+        <Button x:Name="createCollection" HorizontalAlignment="Center" Click="CreateCollection_Click">Create a new collection</Button>
     </StackPanel>
-</Page>
+</ui:BasePage>

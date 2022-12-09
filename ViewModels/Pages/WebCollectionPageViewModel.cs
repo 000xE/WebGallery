@@ -27,6 +27,7 @@ namespace WebGallery.ViewModels.Pages
     {
         private readonly IWebHelper webHelper;
         private readonly IFileHelper fileHelper;
+        private readonly IBitmapHelper bitmapHelper;
 
         private readonly IWebMediaManager webMediaManager;
 
@@ -35,6 +36,7 @@ namespace WebGallery.ViewModels.Pages
             this.webHelper = webHelper;
             this.webMediaManager = serviceProvider.GetService<IWebMediaManager>();
             this.fileHelper = serviceProvider.GetService<IFileHelper>();
+            this.bitmapHelper = serviceProvider.GetService<IBitmapHelper>();
         }
 
         protected override bool ShouldInitialiseItems => true;
@@ -87,8 +89,8 @@ namespace WebGallery.ViewModels.Pages
                     var media = await this.webHelper.DownloadMedia(uri.ToString(), true);
                     if (media.ThumbnailData.Data != null)
                     {
-                        var storageFile = await this.fileHelper.GetFileAsync(Common.Enums.DirectoryType.Resources, collection.Guid.ToString(), media.Guid.ToString());
-                        await this.fileHelper.SaveImageAsync(storageFile, media.ThumbnailData.Size.Width, media.ThumbnailData.Size.Height, media.ThumbnailData.Data);
+                        var storageFile = await this.fileHelper.GetFileAsync(this.ParentEntity.ResourceFolderPath, collection.Guid.ToString(), media.Guid.ToString());
+                        await this.bitmapHelper.SaveMediaAsync(storageFile, media.MediaType, media.ThumbnailData.Size.Width, media.ThumbnailData.Size.Height, media.ThumbnailData.Data);
 
                         var saved = this.webMediaManager.NewSave((Func<WebMedia, bool>)(i =>
                         {

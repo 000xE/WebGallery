@@ -4,16 +4,13 @@ using Microsoft.UI.Xaml;
 using System;
 using WebGallery.Common.Helpers;
 using WebGallery.Common.Helpers.Interfaces;
-using WebGallery.Common.ViewModels;
 using WebGallery.Databases;
 using WebGallery.Helpers;
 using WebGallery.Helpers.Interfaces;
 using WebGallery.Managers;
 using WebGallery.Managers.Interfaces;
 using WebGallery.UI.Windows;
-using WebGallery.ViewModels;
 using WebGallery.ViewModels.Pages;
-using WebGallery.ViewModels.Windows;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -53,10 +50,6 @@ namespace WebGallery
 
         protected void SetViewModels(IServiceCollection serviceDescriptors)
         {
-            //Windows
-            serviceDescriptors.AddScoped<MainWindowViewModel>();
-            serviceDescriptors.AddScoped<WindowViewModel>();
-
             //Pages
             serviceDescriptors.AddTransient<MainPageViewModel>();
             serviceDescriptors.AddTransient<WebCollectionPageViewModel>();
@@ -65,9 +58,11 @@ namespace WebGallery
 
         protected void SetHelpers(IServiceCollection serviceDescriptors)
         {
+            serviceDescriptors.AddSingleton<IWindowHelper, WindowHelper>();
             serviceDescriptors.AddSingleton<IFileHelper, FileHelper>();
             serviceDescriptors.AddSingleton<IHTMLWebScraper, HTMLAgilityWebScraper>();
             serviceDescriptors.AddSingleton<IWebHelper, WebHelper>();
+            serviceDescriptors.AddSingleton<IBitmapHelper, BitmapHelper>();
         }
 
         protected void SetDatabases(IServiceCollection serviceDescriptors)

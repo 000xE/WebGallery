@@ -9,9 +9,10 @@ namespace WebGallery.Common.Helpers.Interfaces
     {
         IAsyncOperation<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName);
         Task<StorageFile> GetFileAsync(DirectoryType directoryType, params string[] paths);
+        Task<StorageFile> GetFileAsync(params string[] paths);
         string GetFilePath(DirectoryType directoryType, params string[] paths);
         IAsyncOperation<StorageFolder> GetFolderAsync(DirectoryType directoryType, params string[] paths);
         string GetFolderPath(DirectoryType directoryType, params string[] paths);
-        Task SaveImageAsync(StorageFile storageFile, int width, int height, byte[] data);
+        string GetFolderPath(params string[] paths);
     }
 }

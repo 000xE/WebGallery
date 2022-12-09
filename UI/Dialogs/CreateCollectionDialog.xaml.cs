@@ -1,20 +1,10 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using WebGallery.Common.Helpers.Interfaces;
 using WebGallery.Models;
 using WebGallery.ViewModels.Pages.Interfaces;
-using WebGallery.ViewModels.Windows;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -24,7 +14,7 @@ namespace WebGallery.UI.Dialogs
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CreateWebCollectionDialog : ContentDialog
+    public sealed partial class CreateWebCollectionDialog : BaseContentDialog
     {
         public CreateWebCollectionDialog(IEntitySaveableViewModel<WebCollection> viewModel)
         {
@@ -34,13 +24,37 @@ namespace WebGallery.UI.Dialogs
 
         public IEntitySaveableViewModel<WebCollection> ViewModel { get; set; }
 
-        private void CreateCollectionDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void CreateCollectionDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            this.ViewModel.NewObject(i => 
-            { 
-                i.Name = this.CollectionName.Text;
-                return true; 
-            });
+            if (this.ViewModel.ParentEntity == null)
+            {
+                FolderPicker folderPicker = new FolderPicker();
+
+                this.InitialiseWithWindow(folderPicker);
+
+                folderPicker.SuggestedStartLocation = PickerLocationId.Unspecified;
+                folderPicker.FileTypeFilter.Add("*");
+
+                var folder = await folderPicker.PickSingleFolderAsync();
+
+                if (folder != null)
+                {
+                    this.ViewModel.NewObject(i =>
+                    {
+                        i.Name = this.CollectionName.Text;
+                        i.ResourceFolderPath = folder.Path;
+                        return true;
+                    });
+                }
+            }
+            else
+            {
+                this.ViewModel.NewObject(i =>
+                {
+                    i.Name = this.CollectionName.Text;
+                    return true;
+                });
+            }
         }
     }
 }

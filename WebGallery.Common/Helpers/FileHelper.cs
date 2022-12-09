@@ -19,6 +19,16 @@ namespace WebGallery.Common.Helpers
 
         }
 
+        public string GetFolderPath(params string[] paths)
+        {
+            string folderPath = Path.Combine(paths);
+
+            //To create folders within the path
+            System.IO.Directory.CreateDirectory(folderPath);
+
+            return folderPath;
+        }
+
         public string GetFolderPath(DirectoryType directoryType, params string[] paths)
         {
             string folderPath;
@@ -66,6 +76,11 @@ namespace WebGallery.Common.Helpers
             return StorageFolder.GetFolderFromPathAsync(this.GetFolderPath(directoryType, paths));
         }
 
+        public IAsyncOperation<StorageFolder> GetFolderAsync(params string[] paths)
+        {
+            return StorageFolder.GetFolderFromPathAsync(this.GetFolderPath(paths));
+        }
+
         public async Task<StorageFile> GetFileAsync(DirectoryType directoryType, params string[] paths)
         {
             var separatedPaths = this.GetSeparatedPaths(directoryType, paths);
@@ -75,26 +90,18 @@ namespace WebGallery.Common.Helpers
             return await this.CreateFileAsync(folder, separatedPaths[1]);
         }
 
+        public async Task<StorageFile> GetFileAsync(params string[] paths)
+        {
+            var separatedPaths = this.GetSeparatedPaths(paths);
+
+            var folder = await this.GetFolderAsync(separatedPaths[0]);
+
+            return await this.CreateFileAsync(folder, separatedPaths[1]);
+        }
+
         public IAsyncOperation<StorageFile> CreateFileAsync(StorageFolder storageFolder, string fileName)
         {
             return storageFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-        }
-
-        public async Task SaveImageAsync(StorageFile storageFile, int width, int height, byte[] data)
-        {
-            using IRandomAccessStream randomAccessStream = await storageFile.OpenAsync(FileAccessMode.ReadWrite);
-
-            BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, randomAccessStream);
-
-            bitmapEncoder.SetPixelData(BitmapPixelFormat.Bgra8,
-                BitmapAlphaMode.Ignore,
-                (uint)width,
-                (uint)height,
-                200,
-                200,
-                data);
-
-            await bitmapEncoder.FlushAsync();
         }
 
         private string[] GetSeparatedPaths(DirectoryType directoryType, params string[] paths)
@@ -108,6 +115,20 @@ namespace WebGallery.Common.Helpers
             else
             {
                 combinedPaths.Add(this.GetFolderPath(directoryType));
+            }
+
+            combinedPaths.Add(paths.LastOrDefault());
+
+            return combinedPaths.ToArray();
+        }
+
+        private string[] GetSeparatedPaths(params string[] paths)
+        {
+            List<string> combinedPaths = new List<string>();
+
+            if (paths.Length > 1)
+            {
+                combinedPaths.Add(this.GetFolderPath(paths.Take(paths.Length - 1).ToArray()));
             }
 
             combinedPaths.Add(paths.LastOrDefault());

@@ -9,10 +9,6 @@ namespace WebGallery.ViewModels.Pages.Interfaces
     {
         TEntity SelectedItem { get; }
 
-#nullable enable
-        TEntity? ParentEntity { get; }
-#nullable disable
-
         IEnumerable<TEntity> GetObjects(Expression<Func<TEntity, bool>> expression = null);
 
         void RefreshCollection(Expression<Func<TEntity, bool>> expression);

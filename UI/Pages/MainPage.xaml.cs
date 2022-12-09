@@ -26,7 +26,7 @@ namespace WebGallery.UI.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : BasePage
     {
         public MainPage()
         {
@@ -42,7 +42,7 @@ namespace WebGallery.UI.Pages
             this.ViewModel.Initialise();
         }
 
-        private void openCollection_Click(object sender, SplitButtonClickEventArgs e)
+        private void OpenCollection_Click(object sender, SplitButtonClickEventArgs e)
         {
             if (this.ViewModel.HasSelectedItem)
             {
@@ -51,14 +51,14 @@ namespace WebGallery.UI.Pages
             }
         }
 
-        private async void createCollection_Click(object sender, RoutedEventArgs e)
+        private async void CreateCollection_Click(object sender, RoutedEventArgs e)
         {
-            CreateWebCollectionDialog dialog = new CreateWebCollectionDialog(this.ViewModel)
+            CreateWebCollectionDialog dialog = new(this.ViewModel)
             {
                 XamlRoot = ((Button)sender).XamlRoot
             };
 
-            var result = await dialog.ShowAsync();
+            await dialog.ShowAsync();
         }
     }
 }

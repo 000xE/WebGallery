@@ -17,7 +17,7 @@ namespace WebGallery.Helpers
 
         }
 
-        public async Task<ThumbnailMedia> DownloadMetadataAsync(string url)
+        public Task<ThumbnailMedia> DownloadMetadataAsync(string url)
         {
             /*
             IConfiguration config = Configuration.Default.WithDefaultLoader();
@@ -29,7 +29,7 @@ namespace WebGallery.Helpers
             IEnumerable<string> titles = cells.Select(m => m.TextContent);
             */
 
-            return new ThumbnailMedia();
+            return Task.FromResult(new ThumbnailMedia());
         }
     }
 }

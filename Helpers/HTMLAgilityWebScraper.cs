@@ -40,38 +40,50 @@ namespace WebGallery.Helpers
             media.Guid = Guid.NewGuid();
             media.MediaType = Models.Enums.MediaType.Image;
 
-            Parallel.ForEach(htmlNodes, node =>
+            if (htmlNodes != null)
             {
-                if (node.Attributes["property"] != null && node.Attributes["content"] != null)
+                Parallel.ForEach(htmlNodes, node =>
                 {
-                    HtmlAttribute property = node.Attributes["property"];
-                    HtmlAttribute content = node.Attributes["content"];
-
-                    switch (property.Value)
+                    if (node != null)
                     {
-                        case "og:title":
-                            media.Title = content.Value;
-                            break;
-                        case "og:video:":
-                        case "og:video:url":
-                            media.URL = content.Value;
-                            media.MediaType = Models.Enums.MediaType.Video;
-                            break;
-                        case "og:url":
-                            media.URL = content.Value;
-                            break;
-                        case "og:image":
-                            if (property.Value.Contains(".gif"))
+                        if (node.Attributes != null)
+                        {
+                            if (node.Attributes["property"] != null && node.Attributes["content"] != null)
                             {
-                                media.MediaType = Models.Enums.MediaType.Animated;
-                                media.URL = content.Value;
-                            }
-                            media.ThumbnailURL = content.Value;
-                            break;
+                                HtmlAttribute property = node.Attributes["property"];
+                                HtmlAttribute content = node.Attributes["content"];
 
+                                if (property != null && content != null)
+                                {
+                                    switch (property.Value)
+                                    {
+                                        case "og:title":
+                                            media.Title = content.Value;
+                                            break;
+                                        case "og:video:":
+                                        case "og:video:url":
+                                            media.URL = content.Value;
+                                            media.MediaType = Models.Enums.MediaType.Video;
+                                            break;
+                                        case "og:url":
+                                            media.URL = content.Value;
+                                            break;
+                                        case "og:image":
+                                            if (property.Value.Contains(".gif"))
+                                            {
+                                                media.MediaType = Models.Enums.MediaType.Animated;
+                                                media.URL = content.Value;
+                                            }
+                                            media.ThumbnailURL = content.Value;
+                                            break;
+
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-            });
+                });
+            }
 
             return media;
         }

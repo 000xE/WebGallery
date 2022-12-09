@@ -13,6 +13,8 @@ namespace WebGallery.Models
 
         public string OriginalFilePath { get; set; }
 
+        public string ResourceFolderPath { get; set; }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
