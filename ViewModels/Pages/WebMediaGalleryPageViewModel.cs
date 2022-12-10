@@ -37,7 +37,7 @@ namespace WebGallery.ViewModels.Pages
             foreach (var uri in uris)
             {
                 var media = await this.webHelper.DownloadMedia(uri.ToString(), true);
-                if (media.Thumbnail.Data.Data != null)
+                if (media.Thumbnail?.Data.Data != null)
                 {
                     var storageFile = await this.fileHelper.GetFileAsync(this.WebCollection.ResourceFolderPath, media.Guid.ToString());
                     await this.bitmapHelper.SaveMediaAsync(storageFile, media.Thumbnail);

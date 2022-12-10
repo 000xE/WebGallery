@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using WebGallery.Models.Enums;
 
 namespace WebGallery.Models.Structures
 {

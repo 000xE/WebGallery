@@ -10,7 +10,7 @@ namespace WebGallery.Helpers
 {
     public class HTMLAgilityWebScraper : IHTMLWebScraper
     {
-        private SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim semaphoreSlim = new(1, 1);
 
         public HTMLAgilityWebScraper()
         {
@@ -23,10 +23,17 @@ namespace WebGallery.Helpers
             {
                 //await this.semaphoreSlim.WaitAsync();
                 var web = new HtmlWeb();
-                var document = await web.LoadFromWebAsync(url).ConfigureAwait(false);
-                var nodes =  document.DocumentNode.SelectNodes("//meta");
-                //this.semaphoreSlim.Release();
-                return this.ScrapeMedia(nodes);
+                try
+                {
+                    var document = await web.LoadFromWebAsync(url).ConfigureAwait(false);
+                    var nodes = document.DocumentNode.SelectNodes("//meta");
+                    //this.semaphoreSlim.Release();
+                    return this.ScrapeMedia(nodes);
+                } 
+                catch(Exception ex)
+                {
+
+                }
             }
 
             return default;

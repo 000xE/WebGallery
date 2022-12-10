@@ -1,5 +1,4 @@
 ﻿using WebGallery.Models.Enums;
-using WebGallery.Models.Structures;
 
 namespace WebGallery.Models.Interfaces
 {

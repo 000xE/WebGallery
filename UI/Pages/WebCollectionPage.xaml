@@ -33,11 +33,16 @@
     </Page.TopAppBar>
 
     <NavigationView
-        Header="{x:Bind ViewModel.SelectedItem.Name, Mode=OneWay}"
         MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
         MenuItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
         SelectedItem="{x:Bind ViewModel.SelectedCategory, Mode=TwoWay}"
         IsBackButtonVisible="Collapsed">
+        <NavigationView.Header>
+            <RelativePanel>
+                <TextBlock Text="{x:Bind ViewModel.SelectedItem.Name, Mode=OneWay}"></TextBlock>
+                <TextBlock Text="{x:Bind ViewModel.SelectedItem.OriginalFilePath, Mode=OneWay}" RelativePanel.AlignRightWithPanel="True"></TextBlock>
+            </RelativePanel>
+        </NavigationView.Header>
 
         <Frame x:Name="ContentFrame"/>
 

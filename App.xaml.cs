@@ -32,23 +32,23 @@ namespace WebGallery
         {
             this.InitializeComponent();
 
-            Ioc.Default.ConfigureServices(this.GetServiceDescriptors().BuildServiceProvider());
+            Ioc.Default.ConfigureServices(App.GetServiceDescriptors().BuildServiceProvider());
         }
 
-        protected IServiceCollection GetServiceDescriptors()
+        protected static IServiceCollection GetServiceDescriptors()
         {
             var collection = new ServiceCollection();
             collection.AddSingleton<IServiceProvider, Ioc>();
 
-            this.SetViewModels(collection);
-            this.SetHelpers(collection);
-            this.SetDatabases(collection);
-            this.SetManagers(collection);
+            App.SetViewModels(collection);
+            App.SetHelpers(collection);
+            App.SetDatabases(collection);
+            App.SetManagers(collection);
 
             return collection;
         }
 
-        protected void SetViewModels(IServiceCollection serviceDescriptors)
+        protected static void SetViewModels(IServiceCollection serviceDescriptors)
         {
             //Pages
             serviceDescriptors.AddTransient<MainPageViewModel>();
@@ -56,7 +56,7 @@ namespace WebGallery
             serviceDescriptors.AddTransient<WebMediaGalleryPageViewModel>();
         }
 
-        protected void SetHelpers(IServiceCollection serviceDescriptors)
+        protected static void SetHelpers(IServiceCollection serviceDescriptors)
         {
             serviceDescriptors.AddSingleton<IWindowHelper, WindowHelper>();
             serviceDescriptors.AddSingleton<IFileHelper, FileHelper>();
@@ -65,12 +65,12 @@ namespace WebGallery
             serviceDescriptors.AddSingleton<IBitmapHelper, BitmapHelper>();
         }
 
-        protected void SetDatabases(IServiceCollection serviceDescriptors)
+        protected static void SetDatabases(IServiceCollection serviceDescriptors)
         {
             serviceDescriptors.AddSingleton<WebDatabase>();
         }
 
-        protected void SetManagers(IServiceCollection serviceDescriptors)
+        protected static void SetManagers(IServiceCollection serviceDescriptors)
         {
             serviceDescriptors.AddSingleton<IWebCollectionManager, WebCollectionManager>();
             serviceDescriptors.AddSingleton<IWebMediaManager, WebMediaManager>();

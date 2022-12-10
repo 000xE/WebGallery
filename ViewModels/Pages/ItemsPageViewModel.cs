@@ -15,11 +15,11 @@ namespace WebGallery.ViewModels.Pages
         where TEntity : class, IEntity, new()
         where TManager : class, IBaseManager<TEntity>
     {
-        private readonly TManager manager;
+        protected readonly TManager Manager;
 
         public ItemsPageViewModel(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            this.manager = serviceProvider.GetService<TManager>();
+            this.Manager = serviceProvider.GetService<TManager>();
         }
 
         public bool HasSelectedItem => this.SelectedItem != null;
@@ -69,11 +69,11 @@ namespace WebGallery.ViewModels.Pages
 
             if (this.ParentEntity != null)
             {
-                objects = this.manager.GetAll(i => i.ParentId == this.ParentEntity.Id);
+                objects = this.Manager.GetAll(i => i.ParentId == this.ParentEntity.Id);
             }
             else
             {
-                objects = this.manager.GetAll();
+                objects = this.Manager.GetAll();
             }
 
             if (expression != null)
@@ -86,7 +86,7 @@ namespace WebGallery.ViewModels.Pages
 
         public int SaveObject(TEntity entity)
         {
-            var changed = this.manager.Save(entity);
+            var changed = this.Manager.Save(entity);
 
             return changed;
         }
@@ -105,7 +105,7 @@ namespace WebGallery.ViewModels.Pages
 
             func(entity);
 
-            var changed = this.manager.Save(entity);
+            var changed = this.Manager.Save(entity);
 
             if (this.ShouldRefreshOnNewItems && changed > 0)
             {
@@ -122,7 +122,7 @@ namespace WebGallery.ViewModels.Pages
 
         public virtual int DeleteObject(TEntity entity)
         {
-            var changed = this.manager.Delete(entity); 
+            var changed = this.Manager.Delete(entity); 
             
             if (this.ShouldRefreshOnDeletedItems && changed > 0)
             {

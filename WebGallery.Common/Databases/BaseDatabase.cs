@@ -1,7 +1,5 @@
 ﻿using SQLite;
 using System;
-using System.Diagnostics;
-using System.Linq;
 using WebGallery.Common.Databases.Interfaces;
 using WebGallery.Common.Helpers.Interfaces;
 
@@ -13,9 +11,15 @@ namespace WebGallery.Common.Databases
     public abstract class BaseDatabase : IDatabase
     {
         private readonly IFileHelper fileHelper;
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
 
         private SQLiteConnection connection;
+
+        public BaseDatabase(IFileHelper fileHelper)
+        {
+            this.fileHelper = fileHelper;
+            this.Initialise();
+        }
 
         protected SQLiteConnection Connection => this.GetConnection();
 
@@ -27,12 +31,6 @@ namespace WebGallery.Common.Databases
 
         protected abstract Type[] EntityTypes { get; }
 
-        public BaseDatabase(IFileHelper fileHelper)
-        {
-            this.fileHelper = fileHelper;
-            this.Initialise();
-        }
-
         public void Initialise()
         {
             this.Connection.CreateTables(this.CreateFlags, this.EntityTypes);
@@ -42,10 +40,7 @@ namespace WebGallery.Common.Databases
         {
             lock (this._lock)
             {
-                if (this.connection == null)
-                {
-                    this.connection = new SQLiteConnection(this.DatabasePath, true);
-                }
+                this.connection ??= new SQLiteConnection(this.DatabasePath, true);
             }
 
             return this.connection;

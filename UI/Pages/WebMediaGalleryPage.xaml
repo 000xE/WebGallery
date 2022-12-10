@@ -24,6 +24,7 @@
         <RelativePanel>
             <CommandBar Background="{ThemeResource AccentFillColorSelectedTextBackgroundBrush}" x:Name="CommandBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" ClosedDisplayMode="Compact">
                 <CommandBar.PrimaryCommands>
+                    <AppBarButton IsEnabled="False" x:Name="CopyLinks" Icon="Copy" Label="Copy links" Click="CopyLinks_Click"/>
                     <AppBarButton Icon="Link" Label="Add links" Click="AddLinks_Click" />
                     <AppBarSeparator/>
                 </CommandBar.PrimaryCommands>
@@ -37,6 +38,7 @@
                     x:Name="Gallery"
                     ItemTemplate="{StaticResource ThumbnailTemplate}"
                     ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+                    SelectionChanged="Gallery_SelectionChanged"
                     CanReorderItems="True"
                     CanDragItems="True"
                     AllowDrop="True"
