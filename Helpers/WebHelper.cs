@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WebGallery.Common.Services.Interfaces;
 using WebGallery.Helpers.Interfaces;
 using WebGallery.Models.Structures;
 using Windows.Graphics.Imaging;
@@ -14,11 +15,14 @@ namespace WebGallery.Helpers
     public class WebHelper : IWebHelper
     {
         private readonly IHTMLWebScraper webScraper;
+        private readonly ILoggingService loggingService;
+
         private readonly HttpClient httpClient = new();
 
-        public WebHelper(IHTMLWebScraper webScraper)
+        public WebHelper(IHTMLWebScraper webScraper, ILoggingService loggingService)
         {
             this.webScraper = webScraper;
+            this.loggingService = loggingService;
         }
 
         public async Task<IEnumerable<Media>> DownloadMedias(List<string> urls, bool includeThumbnail = false)
@@ -98,13 +102,13 @@ namespace WebGallery.Helpers
                         }
                         catch (Exception e)
                         {
-
+                            this.loggingService.Error("Failed to decode thumbnail", e);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-
+                    this.loggingService.Error("Failed to download thumbnail", e);
                 }
             }
 

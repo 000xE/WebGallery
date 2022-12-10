@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Serilog;
 using System;
 using WebGallery.Common.Helpers;
 using WebGallery.Common.Helpers.Interfaces;
+using WebGallery.Common.Services;
+using WebGallery.Common.Services.Interfaces;
 using WebGallery.Databases;
 using WebGallery.Helpers;
 using WebGallery.Helpers.Interfaces;
@@ -24,6 +27,10 @@ namespace WebGallery
     {
         public static Window Window => m_window;
 
+        public static ILoggingService LoggingService => App.loggingService;
+
+        private static ILoggingService loggingService;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -32,20 +39,39 @@ namespace WebGallery
         {
             this.InitializeComponent();
 
+            App.Initialise();
+
+            this.UnhandledException += this.App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            App.loggingService.Fatal("Unhandled exception detected", e.Exception);
+        }
+
+        protected static void Initialise()
+        {
             Ioc.Default.ConfigureServices(App.GetServiceDescriptors().BuildServiceProvider());
+            App.loggingService = Ioc.Default.GetService<ILoggingService>();
         }
 
         protected static IServiceCollection GetServiceDescriptors()
         {
             var collection = new ServiceCollection();
-            collection.AddSingleton<IServiceProvider, Ioc>();
 
-            App.SetViewModels(collection);
+            App.SetPreliminaries(collection);
             App.SetHelpers(collection);
+            App.SetServices(collection);
             App.SetDatabases(collection);
             App.SetManagers(collection);
+            App.SetViewModels(collection);
 
             return collection;
+        }
+
+        protected static void SetPreliminaries(IServiceCollection serviceDescriptors)
+        {
+            serviceDescriptors.AddSingleton<IServiceProvider, Ioc>();
         }
 
         protected static void SetViewModels(IServiceCollection serviceDescriptors)
@@ -74,6 +100,13 @@ namespace WebGallery
         {
             serviceDescriptors.AddSingleton<IWebCollectionManager, WebCollectionManager>();
             serviceDescriptors.AddSingleton<IWebMediaManager, WebMediaManager>();
+        }
+
+        protected static void SetServices(IServiceCollection serviceDescriptors)
+        {
+            serviceDescriptors.AddSingleton<ILoggingService, SeriLogLoggingService>();
+
+            serviceDescriptors.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         }
 
         /// <summary>

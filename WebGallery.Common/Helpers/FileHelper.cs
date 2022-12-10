@@ -35,10 +35,20 @@ namespace WebGallery.Common.Helpers
 
             switch (directoryType)
             {
+                case DirectoryType.Logging:
+                    List<string> combinedPaths = new()
+                    {
+                        Path.Combine(ApplicationData.Current.TemporaryFolder.Path, directoryType.ToString())
+                    };
+
+                    combinedPaths.AddRange(paths);
+
+                    folderPath = Path.Combine(combinedPaths.ToArray());
+                    break;
                 case DirectoryType.Resources:
                 case DirectoryType.Database:
                 default:
-                    List<string> combinedPaths = new()
+                    combinedPaths = new()
                     {
                         Path.Combine(ApplicationData.Current.LocalFolder.Path, directoryType.ToString())
                     }; 
