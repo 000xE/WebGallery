@@ -23,10 +23,17 @@ namespace WebGallery.Helpers
             {
                 //await this.semaphoreSlim.WaitAsync();
                 var web = new HtmlWeb();
-                var document = await web.LoadFromWebAsync(url).ConfigureAwait(false);
-                var nodes =  document.DocumentNode.SelectNodes("//meta");
-                //this.semaphoreSlim.Release();
-                return this.ScrapeMedia(nodes);
+                try
+                {
+                    var document = await web.LoadFromWebAsync(url).ConfigureAwait(false);
+                    var nodes = document.DocumentNode.SelectNodes("//meta");
+                    //this.semaphoreSlim.Release();
+                    return this.ScrapeMedia(nodes);
+                } 
+                catch(Exception ex)
+                {
+
+                }
             }
 
             return default;

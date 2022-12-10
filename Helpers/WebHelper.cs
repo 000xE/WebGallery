@@ -41,7 +41,7 @@ namespace WebGallery.Helpers
         {
             var media = await this.webScraper.DownloadMediaAsync(url);
 
-            if (includeThumbnail)
+            if (includeThumbnail && media.Thumbnail != null)
             {
                 media.Thumbnail.Data = await this.DownloadMediaThumbnail(media).ConfigureAwait(false);
             }
@@ -55,42 +55,56 @@ namespace WebGallery.Helpers
 
             if (!string.IsNullOrEmpty(media.ThumbnailURL))
             {
-                var response = await this.httpClient.GetAsync(new Uri(media.ThumbnailURL)).ConfigureAwait(false);
-
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
+                try
                 {
-                    using IRandomAccessStream randomAccessStream = (await response.Content.ReadAsStreamAsync()).AsRandomAccessStream();
+                    var response = await this.httpClient.GetAsync(new Uri(media.ThumbnailURL)).ConfigureAwait(false);
 
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
-
-                    BitmapTransform transform = new()
+                    if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        ScaledHeight = decoder.PixelHeight,
-                        ScaledWidth = decoder.PixelWidth
-                    };
+                        using IRandomAccessStream randomAccessStream = (await response.Content.ReadAsStreamAsync()).AsRandomAccessStream();
 
-                    //PixelDataProvider pixelDataProvider = await decoder.GetPixelDataAsync();
+                        try
+                        {
+                            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
 
-                    PixelDataProvider pixelDataProvider = await decoder.GetPixelDataAsync(
-                            BitmapPixelFormat.Bgra8,
-                            BitmapAlphaMode.Straight,
-                            transform,
-                            ExifOrientationMode.IgnoreExifOrientation,
-                            ColorManagementMode.DoNotColorManage);
+                            BitmapTransform transform = new()
+                            {
+                                ScaledHeight = decoder.PixelHeight,
+                                ScaledWidth = decoder.PixelWidth
+                            };
 
-                    byte[] sourcePixels = pixelDataProvider.DetachPixelData();
+                            //PixelDataProvider pixelDataProvider = await decoder.GetPixelDataAsync();
 
-                    mediaData.Size = new System.Drawing.Size()
-                    {
-                        Height = Convert.ToInt32(transform.ScaledHeight),
-                        Width = Convert.ToInt32(transform.ScaledWidth)
-                    };
+                            PixelDataProvider pixelDataProvider = await decoder.GetPixelDataAsync(
+                                    BitmapPixelFormat.Bgra8,
+                                    BitmapAlphaMode.Straight,
+                                    transform,
+                                    ExifOrientationMode.IgnoreExifOrientation,
+                                    ColorManagementMode.DoNotColorManage);
 
-                    mediaData.Data = sourcePixels;
-                    /*
-                    var contentStream = await response.Content.ReadAsStreamAsync();
-                    BitmapImage bitmapImage = new();
-                    await bitmapImage.SetSourceAsync(randomAccessStream);*/
+                            byte[] sourcePixels = pixelDataProvider.DetachPixelData();
+
+                            mediaData.Size = new System.Drawing.Size()
+                            {
+                                Height = Convert.ToInt32(transform.ScaledHeight),
+                                Width = Convert.ToInt32(transform.ScaledWidth)
+                            };
+
+                            mediaData.Data = sourcePixels;
+                            /*
+                            var contentStream = await response.Content.ReadAsStreamAsync();
+                            BitmapImage bitmapImage = new();
+                            await bitmapImage.SetSourceAsync(randomAccessStream);*/
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
                 }
             }
 

@@ -11,6 +11,8 @@ namespace WebGallery.Models
     {
         public MediaType MediaType { get; set; }
 
+        public string MediaURL { get; set; }
+
         public string ThumbnailFilePath { get; set; }
     }
 }

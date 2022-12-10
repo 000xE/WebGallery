@@ -64,12 +64,17 @@ namespace WebGallery.ViewModels.Pages
         {
             foreach (var file in files)
             {
-                var collection = this.NewObject(i =>
+                var collection = this.Manager.Find(i => i.OriginalFilePath == file.Path);
+
+                if (collection == null)
                 {
-                    i.Name = file.DisplayName;
-                    i.OriginalFilePath = file.Path;
-                    return true;
-                });
+                    collection = this.NewObject(i =>
+                    {
+                        i.Name = file.DisplayName;
+                        i.OriginalFilePath = file.Path;
+                        return true;
+                    });
+                }
 
                 var lines = File.ReadLines(file.Path);
                 var uris = this.webHelper.ParseURLs(lines);
@@ -78,22 +83,28 @@ namespace WebGallery.ViewModels.Pages
                 //{
                 foreach (var uri in uris)
                 {
-                    var media = await this.webHelper.DownloadMedia(uri.ToString(), true);
-                    if (media.Thumbnail.Data.Data != null)
-                    {
-                        var storageFile = await this.fileHelper.GetFileAsync(collection.ResourceFolderPath, media.Guid.ToString());
-                        await this.bitmapHelper.SaveMediaAsync(storageFile, media.Thumbnail);
+                    var uriString = uri.ToString();
 
-                        var saved = this.webMediaManager.NewSave((Func<WebMedia, bool>)(i =>
+                    if (this.webMediaManager.Find(i => i.URL.Contains(uriString)) == null)
+                    {
+                        var media = await this.webHelper.DownloadMedia(uriString, true);
+                        if (media.Thumbnail?.Data.Data != null)
                         {
-                            i.Guid = media.Guid;
-                            i.Title = media.Title;
-                            i.ThumbnailFilePath = storageFile.Path;
-                            i.MediaType = media.MediaType;
-                            i.URL = media.URL;
-                            i.CollectionId = collection.Id;
-                            return true;
-                        }));
+                            var storageFile = await this.fileHelper.GetFileAsync(collection.ResourceFolderPath, media.Guid.ToString());
+                            await this.bitmapHelper.SaveMediaAsync(storageFile, media.Thumbnail);
+
+                            var saved = this.webMediaManager.NewSave((Func<WebMedia, bool>)(i =>
+                            {
+                                i.Guid = media.Guid;
+                                i.Title = media.Title;
+                                i.ThumbnailFilePath = storageFile.Path;
+                                i.MediaType = media.MediaType;
+                                i.URL = uriString;
+                                i.MediaURL = media.URL;
+                                i.CollectionId = collection.Id;
+                                return true;
+                            }));
+                        }
                     }
                 }
                 //});
