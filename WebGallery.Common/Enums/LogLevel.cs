@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace WebGallery.Common.Enums
 {
-    public enum DirectoryType
+    public enum LogLevel
     {
-        Database,
-        Resources,
-        Settings,
-        Logging
+        Fatal = 0,
+        Error = 1,
+        Warning = 2,
+        Infomation = 3,
+        Debug = 4,
+        Trace = 5
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WebGallery.Common.Services.Interfaces;
 using WebGallery.Helpers.Interfaces;
 using WebGallery.Models;
 using WebGallery.Models.Structures;
@@ -10,11 +11,13 @@ namespace WebGallery.Helpers
 {
     public class HTMLAgilityWebScraper : IHTMLWebScraper
     {
+        private readonly ILoggingService loggingService;
+
         private readonly SemaphoreSlim semaphoreSlim = new(1, 1);
 
-        public HTMLAgilityWebScraper()
+        public HTMLAgilityWebScraper(ILoggingService loggingService)
         {
-
+            this.loggingService = loggingService;
         }
 
         public async Task<Media> DownloadMediaAsync(string url)
@@ -30,9 +33,9 @@ namespace WebGallery.Helpers
                     //this.semaphoreSlim.Release();
                     return this.ScrapeMedia(nodes);
                 } 
-                catch(Exception ex)
+                catch (Exception e)
                 {
-
+                    this.loggingService.Error($"Failed to load the document for {url}", e);
                 }
             }
 

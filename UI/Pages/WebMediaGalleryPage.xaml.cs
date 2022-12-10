@@ -73,8 +73,10 @@ namespace WebGallery.UI.Pages
 
         private void CopyLinks_Click(object sender, RoutedEventArgs e)
         {
-            DataPackage dataPackage = new DataPackage(); 
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            DataPackage dataPackage = new()
+            {
+                RequestedOperation = DataPackageOperation.Copy,
+            };
 
             var urls = this.Gallery.SelectedItems.Cast<WebMedia>().Select(i => i.URL);
             dataPackage.SetText(string.Join('\n', urls)); 
