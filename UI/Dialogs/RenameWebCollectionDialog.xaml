@@ -17,7 +17,7 @@
     CloseButtonClick="BaseContentDialog_CloseButtonClick"
     Closing="BaseContentDialog_Closing"
     DefaultButton="Primary"
-    Title="{x:Bind ViewModel.SelectedItem.Name,Mode=OneTime}">
+    Title="{x:Bind WebCollection.Name,Mode=OneTime}">
 
     <StackPanel Orientation="Vertical">
         <TextBox x:Name="CollectionName"></TextBox>

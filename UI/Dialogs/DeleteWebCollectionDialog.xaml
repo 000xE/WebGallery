@@ -14,7 +14,7 @@
     CloseButtonText="Cancel"
     PrimaryButtonText="Delete collection"
     PrimaryButtonClick="BaseContentDialog_PrimaryButtonClick"
-    Title="{x:Bind ViewModel.SelectedItem.Name,Mode=OneTime}">
+    Title="{x:Bind WebCollection.Name,Mode=OneTime}">
 
     <Grid>
         <TextBlock>
