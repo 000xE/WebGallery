@@ -10,6 +10,7 @@ using WebGallery.Common.Helpers.Interfaces;
 using WebGallery.Helpers.Interfaces;
 using WebGallery.Managers.Interfaces;
 using WebGallery.Models;
+using WebGallery.Models.Structures;
 using Windows.Storage;
 
 namespace WebGallery.ViewModels.Pages
@@ -85,7 +86,9 @@ namespace WebGallery.ViewModels.Pages
                 {
                     var uriString = uri.ToString();
 
-                    if (this.webMediaManager.Find(i => i.URL.Contains(uriString)) == null)
+                    var existing = this.webMediaManager.Find(i => i.URL.Contains(uriString) && i.ParentId == 0);
+
+                    if (existing == null)
                     {
                         var media = await this.webHelper.DownloadMedia(uriString, true);
                         if (media.Thumbnail?.Data.Data != null)
@@ -101,6 +104,26 @@ namespace WebGallery.ViewModels.Pages
                                 i.MediaType = media.MediaType;
                                 i.URL = uriString;
                                 i.MediaURL = media.URL;
+                                i.CollectionId = collection.Id;
+                                return true;
+                            }));
+                        }
+                    }
+                    else if (existing.CollectionId != collection.Id)
+                    {
+                        var existingCurrent = this.webMediaManager.Find(i => i.URL.Contains(uriString) && i.CollectionId == collection.Id);
+
+                        if (existingCurrent == null)
+                        {
+                            var saved = this.webMediaManager.NewSave((Func<WebMedia, bool>)(i =>
+                            {
+                                i.ParentId = existing.Id;
+                                i.Guid = existing.Guid;
+                                i.Title = existing.Title;
+                                i.ThumbnailFilePath = existing.ThumbnailFilePath;
+                                i.MediaType = existing.MediaType;
+                                i.URL = uriString;
+                                i.MediaURL = existing.MediaURL;
                                 i.CollectionId = collection.Id;
                                 return true;
                             }));
