@@ -91,23 +91,29 @@ namespace WebGallery.ViewModels.Pages
                     if (existing == null)
                     {
                         var media = await this.webHelper.DownloadMedia(uriString, true);
+
+                        string thumbnailPath = "INVALID";
+
                         if (media.Thumbnail?.Data.Data != null)
                         {
                             var storageFile = await this.fileHelper.GetFileAsync(collection.ResourceFolderPath, media.Guid.ToString());
-                            await this.bitmapHelper.SaveMediaAsync(storageFile, media.Thumbnail);
 
-                            var saved = this.webMediaManager.NewSave((Func<WebMedia, bool>)(i =>
+                            thumbnailPath = storageFile.Path;
+
+                            await this.bitmapHelper.SaveMediaAsync(storageFile, media.Thumbnail);
+                        }
+
+                        var saved = this.webMediaManager.NewSave((Func<WebMedia, bool>)(i =>
                             {
                                 i.Guid = media.Guid;
                                 i.Title = media.Title;
-                                i.ThumbnailFilePath = storageFile.Path;
+                                i.ThumbnailFilePath = thumbnailPath;
                                 i.MediaType = media.MediaType;
                                 i.URL = uriString;
                                 i.MediaURL = media.URL;
                                 i.CollectionId = collection.Id;
                                 return true;
                             }));
-                        }
                     }
                     else if (existing.CollectionId != collection.Id)
                     {
