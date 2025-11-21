@@ -14,7 +14,7 @@
     <Page.Resources>
         <DataTemplate x:Name="ThumbnailTemplate" x:DataType="models:WebMedia">
             <StackPanel>
-                <Image MaxWidth="600" Source="{x:Bind ThumbnailFilePath}"/>
+                <Image Width="640" Height="360" Source="{x:Bind ThumbnailFilePath}"/>
                 <TextBlock Padding="10" HorizontalAlignment="Center" Text="{x:Bind Title}" Foreground="AntiqueWhite" TextWrapping="WrapWholeWords"/>
             </StackPanel>
         </DataTemplate>
@@ -26,6 +26,7 @@
                 <CommandBar.PrimaryCommands>
                     <AppBarButton IsEnabled="False" x:Name="CopyLinks" Icon="Copy" Label="Copy links" Click="CopyLinks_Click"/>
                     <AppBarButton Icon="Link" Label="Add links" Click="AddLinks_Click" />
+                    <AppBarButton IsEnabled="False" x:Name="DeleteMedia" Icon="Delete" Label="Delete media" Click="DeleteMedia_Click" />
                     <AppBarSeparator/>
                 </CommandBar.PrimaryCommands>
                 <CommandBar.SecondaryCommands>

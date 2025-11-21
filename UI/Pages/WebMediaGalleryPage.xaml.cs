@@ -84,9 +84,17 @@ namespace WebGallery.UI.Pages
             Clipboard.SetContent(dataPackage);
         }
 
+        private async void DeleteMedia_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteWebMediaDialog dialog = new(sender, this.ViewModel, this.Gallery.SelectedItems.Cast<WebMedia>());
+
+            await dialog.ShowAsync();
+        }
+
         private void Gallery_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
             this.CopyLinks.IsEnabled = this.Gallery.SelectedItems.Count > 0;
+            this.DeleteMedia.IsEnabled = this.Gallery.SelectedItems.Count > 0;
         }
     }
 }
