@@ -44,6 +44,14 @@
             </RelativePanel>
         </NavigationView.Header>
 
+         <NavigationView.AutoSuggestBox>
+             <AutoSuggestBox x:Name="NavViewSearchBox" QueryIcon="Find"
+                             PlaceholderText="Search a collection..."
+                             TextChanged="NavViewSearchBox_TextChanged" 
+                             SuggestionChosen="NavViewSearchBox_SuggestionChosen"
+                             DisplayMemberPath="Name" TextMemberPath="Name"/>
+         </NavigationView.AutoSuggestBox>
+
         <Frame x:Name="ContentFrame"/>
 
     </NavigationView>

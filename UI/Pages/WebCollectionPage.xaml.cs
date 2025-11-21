@@ -89,5 +89,23 @@ namespace WebGallery.UI.Pages
                 }
             }
         }
+
+        private void NavViewSearchBox_TextChanged(Microsoft.UI.Xaml.Controls.AutoSuggestBox sender, Microsoft.UI.Xaml.Controls.AutoSuggestBoxTextChangedEventArgs args)
+        {
+            switch (args.Reason)
+            {
+                case Microsoft.UI.Xaml.Controls.AutoSuggestionBoxTextChangeReason.UserInput:
+                    sender.ItemsSource = this.ViewModel.Categories.Where(x => x.Name.Contains(sender.Text, StringComparison.OrdinalIgnoreCase));
+                    break;
+            }
+        }
+
+        private void NavViewSearchBox_SuggestionChosen(Microsoft.UI.Xaml.Controls.AutoSuggestBox sender, Microsoft.UI.Xaml.Controls.AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            if (args.SelectedItem is Category category)
+            {
+                this.ViewModel.SelectedCategory = category;
+            }
+        }
     }
 }
